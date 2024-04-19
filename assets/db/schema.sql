@@ -1,27 +1,31 @@
+DROP TABLE IF EXISTS employees;
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS departments;
+
 DROP DATABASE IF EXISTS employee_db;
 CREATE DATABASE employee_db;
 
 \c employee_db;
 
 CREATE TABLE departments (
-  department_id SERIAL PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   department_name VARCHAR(50)
 );
 
 CREATE TABLE roles (
-  role_id SERIAL PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   title VARCHAR(50),
-  salary DECIMAL(10, 2),
+  salary DECIMAL NOT NULL,
   department_id INT,
-  FOREIGN KEY (department_id) REFERENCES departments (department_id)
+  FOREIGN KEY (department_id) REFERENCES departments (id)
 );
 
 CREATE TABLE employees (
-  employee_id SERIAL PRIMARY KEY,
-  first_name VARCHAR(50),
-  last_name VARCHAR(50),
-  role_id INT,
+  id SERIAL PRIMARY KEY,
+  first_name VARCHAR(30) NOT NULL,
+  last_name VARCHAR(30) NOT NULL,
+  role_id INT NOT NULL,
   manager_id INT,
-  FOREIGN KEY (role_id) REFERENCES roles (role_id),
-  FOREIGN KEY (manager_id) REFERENCES employees (employee_id)
+  FOREIGN KEY (role_id) REFERENCES roles (id),
+  FOREIGN KEY (manager_id) REFERENCES employees (id)
 );
