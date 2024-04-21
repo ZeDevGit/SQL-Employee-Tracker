@@ -15,7 +15,7 @@ app.use(express.json());
 const pool = new Pool(
   {
     user: 'postgres',
-    password: 'Derogatory88',
+    password: 'password',
     host: 'localhost',
     database: 'employee_db',
   },
@@ -46,6 +46,7 @@ function start() {
         case 'View all departments':
           pool.query(`SELECT * FROM departments`, (err, result) => {
             if (err) throw err;
+            console.log("Viewing All Departments: ");
             console.table(result.rows);
             start();
           });
@@ -55,6 +56,7 @@ function start() {
             if (err) throw err;
             console.log("Viewing All Roles: ");
             console.table(result.rows);
+            start();
           });
           break;
 
@@ -63,6 +65,7 @@ function start() {
             if (err) throw err;
             console.log("Viewing All Employees: ");
             console.table(result.rows);
+            start();
           });
           break;
 
@@ -81,9 +84,9 @@ function start() {
               }
             }
           }]).then((answers) => {
-            pool.query(`INSERT INTO departments (name) VALUES (?)`, [answers.departments], (err, result) => {
+            pool.query(`INSERT INTO departments (department_name) VALUES ($1)`, [answers.department], (err, result) => {
               if (err) throw err;
-              console.log(`Added ${answers.department} to the database.`)
+              console.log(`Added ${answers.departments} to the database.`)
             });
           });
           break;
@@ -129,7 +132,7 @@ function start() {
               }
             }
           }]).then((answers) => {
-            pool.query(`INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)`, [answers.title, answers.salary, answers.department_id], (err, result) => {
+            pool.query(`INSERT INTO roles (title, salary, department_id) VALUES ($1, $2, $3)`, [answers.title, answers.salary, answers.department_id], (err, result) => {
               if (err) throw err;
               console.log(`Added ${answers.title} to the database.`)
             });
@@ -192,7 +195,7 @@ function start() {
                 }
               }
             }]).then((answers) => {
-              pool.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`, [answers.first_name, answers.last_name, answers.role_id, answers.manager_id], (err, result) => {
+              pool.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4)`, [answers.first_name, answers.last_name, answers.role_id, answers.manager_id], (err, result) => {
                 if (err) throw err;
                 console.log(`Added ${answers.first_name} ${answers.last_name} to the database.`)
               });
@@ -230,7 +233,7 @@ function start() {
                 }
               }
             }]).then((answers) => {
-              pool.query(`UPDATE employee SET role_id = ? WHERE id = ?`, [answers.role_id, answers.employee_id], (err, result) => {
+              pool.query(`UPDATE employee SET role_id = $1 WHERE id = $2`, [answers.role_id, answers.employee_id], (err, result) => {
                 if (err) throw err;
                 console.log(`Updated employee role to ${answers.role_id}.`)
               });
