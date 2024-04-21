@@ -1,3 +1,4 @@
+-- Removes the database if it exists and creates employee_db
 DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS departments;
@@ -7,6 +8,7 @@ CREATE DATABASE employee_db;
 
 \c employee_db;
 
+-- Creates the departments, roles, and employees tables
 CREATE TABLE departments (
   id SERIAL PRIMARY KEY,
   department_name VARCHAR(50)

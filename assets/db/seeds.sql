@@ -1,3 +1,4 @@
+-- Creates seed data for the departments, roles, and employees tables
 INSERT INTO departments (department_name)
 VALUES ('Engineering'),
        ('Sales'),

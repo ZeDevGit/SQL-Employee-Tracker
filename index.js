@@ -25,6 +25,7 @@ const pool = new Pool(
 
 pool.connect();
 
+// Creates a logo for the Employee Tracker in the console
 console.log(
   logo({
       name: 'Employee Tracker',
