@@ -12,6 +12,10 @@ An application using Command Line to track and manage a company's employee datab
 
 - [Demonstration](#demonstration)
 
+- [Credits](#credits)
+
+- [License](#license)
+
 - [Questions](#questions)
 
 
@@ -53,10 +57,10 @@ THEN I am prompted to select an employee to update and their new role and this i
 
 ## Demonstration
 
-
 https://github.com/ZeDevGit/SQL-Employee-Tracker/assets/42353819/2ed644e2-59b9-4411-bd8e-2006c33d7507
 
-
+## Credits
+- Edward Lawrence
 
 ## License
  ![Empty Badge](https://img.shields.io/badge/MIT-License-blue)
