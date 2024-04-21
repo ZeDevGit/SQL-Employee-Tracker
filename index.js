@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const express = require('express');
+const logo = require('asciiart-logo');
 // Import and require Pool (node-postgres)
 // We'll be creating a Connection Pool. Read up on the benefits here: https://node-postgres.com/features/pooling
 const { Pool } = require('pg');
@@ -11,7 +12,7 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// Connect to database
+// Connect to database (you will need to use your own personal postgres username and password)
 const pool = new Pool(
   {
     user: 'postgres',
@@ -24,6 +25,21 @@ const pool = new Pool(
 
 pool.connect();
 
+console.log(
+  logo({
+      name: 'Employee Tracker',
+      font: 'Speed',
+      lineChars: 10,
+      padding: 2,
+      margin: 3,
+      borderColor: 'grey',
+      logoColor: 'bold-green',
+      textColor: 'green',
+  })
+  .render()
+);
+
+// Prompt user for what action they want to do next on the database
 function start() {
   inquirer
     .prompt({
@@ -41,6 +57,7 @@ function start() {
         'Exit',
       ],
     })
+    // Switch case to handle the user's choice between View all deparements, roles, employees
     .then((answer) => {
       switch (answer.action) {
         case 'View all departments':
@@ -69,6 +86,7 @@ function start() {
           });
           break;
 
+          // Adds a department to the database from the user's input
         case 'Add a department':
           inquirer.prompt([{
             // Adding a Department
@@ -87,10 +105,12 @@ function start() {
             pool.query(`INSERT INTO departments (department_name) VALUES ($1)`, [answers.department], (err, result) => {
               if (err) throw err;
               console.log(`Added ${answers.departments} to the database.`)
+              start();
             });
           });
           break;
 
+          // Adds a role to the database from the user's input
         case 'Add a role':
           inquirer.prompt([{
             // Adding a Role
@@ -135,10 +155,12 @@ function start() {
             pool.query(`INSERT INTO roles (title, salary, department_id) VALUES ($1, $2, $3)`, [answers.title, answers.salary, answers.department_id], (err, result) => {
               if (err) throw err;
               console.log(`Added ${answers.title} to the database.`)
+              start();
             });
           });
           break;
 
+          // Adds an employee to the database from the user's input
         case 'Add an employee':
           pool.query(`SELECT * FROM employees`, (err, result) => {
             if (err) throw err;
@@ -198,11 +220,13 @@ function start() {
               pool.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4)`, [answers.first_name, answers.last_name, answers.role_id, answers.manager_id], (err, result) => {
                 if (err) throw err;
                 console.log(`Added ${answers.first_name} ${answers.last_name} to the database.`)
+                start();
               });
             });
           });
           break;
 
+          // Updates an employee role in the database from the user's input
         case 'Update an employee role':
           pool.query(`SELECT * FROM employees, roles`, (err, result) => {
             if (err) throw err;
@@ -246,17 +270,15 @@ function start() {
           console.log('Goodbye!');
           break;
         default:
-          start();
           console.log(`Invalid action: ${answer.action}`);
+          start();
       }
     });
 }
 
+// Start the application after connecting to the database
 start();
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-// You will need to create the functions viewAllDepartments, viewAllRoles, viewAllEmployees, addDepartment, addRole, addEmployee, updateEmployeeRole
-// Each of these functions will use the `db.query` method to execute the appropriate SQL command
